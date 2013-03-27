@@ -52,5 +52,23 @@ object Main {
   /**
    * Exercise 3
    */
-  def countChange(money: Int, coins: List[Int]): Int = ???
+  def countChange(money: Int, coins: List[Int]): Int = {
+    money match {
+      case x if money < 0 => throw new NoSuchElementException
+      case x if money == 0 => 0
+      case _ => countChangeInt(money, coins.sortWith(_>_), 0)
+    }
+  }
+  
+  def countChangeInt(money: Int, coins: List[Int], solutions: Int): Int = {
+    if (coins.isEmpty) solutions
+    else {
+      val remaining = money - coins.head
+      remaining match {
+        case x if remaining > 0 => countChangeInt(x, coins, solutions) + countChangeInt(x, coins.tail, solutions)
+        case x if remaining < 0 => countChangeInt(money, coins.tail, solutions)
+        case 0 => countChangeInt(money, coins.tail, solutions + 1)
+      }
+    }
+  }
 }
